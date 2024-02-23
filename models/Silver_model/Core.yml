@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: orders_nueva
+    description: orders fact table
+    tests:
+      - dbt_expectations.expect_table_column_count_to_equal:
+          value: 9
+    columns:
+      - name: O_ORDERKEY
+        description: primary key of the model
+        tests:
+          - unique
+          - not_null
+          - relationships:
+              to: ref('orders_nueva2')
+              field: order_key
+              severity: warn
+      - name: O_CUSTKEY
+        description: foreign key for customers
+        data_type: number (66,0)
+      - name: O_ORDERDATE
+        description: date of the order
+      - name: O_ORDERSTATUS
+        description: status of the order
+        tests:
+          - accepted_values:
+              values: ['P','O','F']
+      - name: O_ORDERPRIORITY
+        description: code associated with the order
+      - name: O_CLERK
+        description: id of the clerk
+      - name: O_SHIPPRIORITY
+        description: numeric representation of the shipping priority, zero being the default
+      - name: O_COMMENT
+        description: count of order
+      - name: O_TOTALPRICE
+        description: total price
